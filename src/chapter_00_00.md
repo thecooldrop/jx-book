@@ -8,7 +8,9 @@ such as Jenkins. In the words of the creators of Jenkins X the tool has the foll
 > accelerate their software delivery at any scale.
 
 
-Well that is a mouthful, but let us try to dissect what that means, piece by piece.
+Well that is a mouthful, but let us try to dissect what that means, piece by piece. Here we will provide only the 
+overview of what each of these pieces mean, while a more detailed description is going to be provided in future 
+chapters.
 
 ## Pipeline automation
 
@@ -37,4 +39,33 @@ for each of your repositories to best suit your needs.
 
 ## Built-in GitOps
 
+GitOps is a development methodology building up on DevOps which advocates transparency of configuration and operations
+by managing everything in declarative and version fashion in Git repositories. In GitOps the state of your machines,
+your Kubernetes clusters and configurations of each deployed application are visible directly in your GitOps repository.
+In Jenkins X this is usually achieved by having additional repositories which store this declarative description and
+which are used to restore and synchronize the state of deployment if this declarative descritpion changes.
+
+For example if you wanted to deploy a new application called `ExampleApp` then you would go to your GitOps repository 
+and would add a declaration that you would like to deploy the application `ExampleApp` into your cluster using some
+specified configuration. The declaration usually consists of a path to Helm Chart representing this application together
+with a set of `values.yaml` files representing the configuration of the application which you would like to install.
+Once you commit this declaration to your Jenkins X repository the automation provided by Jenkins X would ensure that
+your declaration is honored, and would deploy the application to your configured cluster.
+
+Built-in GitOps further means in Jenkins X that part of this process is automated, and most of the declarations are
+generated for your by Jenkins X as soon as you register your `ExampleApp` to be managed by Jenkins X
+
+## Preview environments
+
+It is a common practice trying to diagnose bugs and failures introduced into application by developing new code. This is
+the reason why developers often want to deploy their application to an environment where they can test their changes,
+without those changes being accessible to the end-users. That is what preview environments are all about.
+
+Preview environments are managed by Jenkins X. Taking our `ExampleApp` from previous section assume that you wanted to
+implement a new feature for this application. Usually you would create a new branch for the feature, do your work and
+eventually after local testing and unit testing you would push the changes and open a Pull Request in order for your
+changes to be reviewed by your peers. This is where preview environments kick in. If preview environments are configured
+for your application, then as soon as you open a pull request Jenkins X would notice that and deploy the latest commit
+on your branch into an environment, where you can test your application. Application would then be redeployed on every
+new commit, thus enabling you to continuously ensure that your additional changes have not introduced any errors.
 
